@@ -1,7 +1,10 @@
 import streamlit as st
 import speech_recognition as sr
+import csv
+import pyttsx3
 from datetime import datetime
 import pandas as pd
+import os
 
 # Function to recognize speech
 def recognize_present(timeout=5):
@@ -26,6 +29,12 @@ def recognize_present(timeout=5):
         st.sidebar.error(f"Could not request results from Google Speech Recognition service: {e}")
         return None
 
+# Function to speak text
+def speak(text):
+    engine = pyttsx3.init()
+    engine.say(text)
+    engine.runAndWait()
+
 # Streamlit app
 def main():
     st.set_page_config(page_title="Voice Recognition Roll Call", page_icon="🎤")
@@ -46,6 +55,7 @@ def main():
     
     for roll_number, student_name in enrolled_students.items():
         st.sidebar.write(f"### Roll Number: {roll_number}")
+        speak(f"Roll Number {roll_number}")
         st.write(f"Calling {student_name}...")
         st.sidebar.write("Please say 'present' when called.")
         st.sidebar.write("Listening...")
