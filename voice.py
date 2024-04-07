@@ -6,14 +6,26 @@ from datetime import datetime
 import pandas as pd
 import os
 
+import pyaudio
+
+def get_default_input_device_info():
+    audio = pyaudio.PyAudio()
+    device_index = audio.get_default_input_device_info()
+    device_info = audio.get_device_info_by_index(device_index)
+    audio.terminate()
+    return device_info
+
+# Example usage
+default_device_info = get_default_input_device_info()
+print(default_device_info)
 
 
-# try:
-#     # Attempt to record audio
-#     audio_data = st.audio("Record audio", format="audio/wav", start_recording=True, encoding="wav")
-#     st.write("Microphone is available.")
-# except Exception as e:
-#     st.error("Microphone is not available. Please grant microphone permissions.")
+try:
+    # Attempt to record audio
+    audio_data = st.audio("Record audio", format="audio/wav", start_recording=True, encoding="wav")
+    st.write("Microphone is available.")
+except Exception as e:
+    st.error("Microphone is not available. Please grant microphone permissions.")
 
 
 
