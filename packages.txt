@@ -1,2 +1,2 @@
 libespeak1
-portaudio
+portaudio19-dev
