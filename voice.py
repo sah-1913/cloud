@@ -44,18 +44,6 @@ def main():
     num_lecture = st.sidebar.number_input("Lecture number of the subject for the day", 
                                            min_value=1, max_value=10, value=1)
 
-    # Upload attendance.csv file
-    uploaded_file = st.sidebar.file_uploader("Upload attendance.csv file", type=["csv"])
-    
-    if uploaded_file is not None:
-        attendance = pd.read_csv(uploaded_file)
-    else:
-        attendance = pd.DataFrame(columns=["Lec_num", "Date", "Time", "1", "2", "3", "4"])
-
-    if num_lecture in attendance['Lec_num'].values:
-        st.sidebar.error("Roll Call already done for this lecture.")
-        return
-
     st.sidebar.success("Roll Call Started...")
 
     enrolled_students = {"1": "Sakshi", "2": "Prasad", "3": "Bhavin", "4": "Nairutya"}
@@ -63,48 +51,26 @@ def main():
     current_date = datetime.now().strftime("%d-%m-%Y")
     current_time = datetime.now().strftime("%H:%M:%S")
 
-    attendance = attendance.append({'Lec_num': num_lecture,
-                                    'Date': current_date,
-                                    'Time': current_time,
-                                    '1': 'A', 
-                                    '2': 'A', 
-                                    '3': 'A', 
-                                    '4': 'A', 
-                                    }, ignore_index=True)
-
-    roll_call_output = []  # List to store roll call results
+    attendance = pd.DataFrame(columns=["Roll Number", "Student Name", "Attendance"])
     
-    for roll_number in enrolled_students.keys():
+    for roll_number, student_name in enrolled_students.items():
         st.sidebar.write(f"### Roll Number: {roll_number}")
         speak(f"Roll Number {roll_number}")
-        student_name = enrolled_students[roll_number]
         st.write(f"Calling {student_name}...")
         st.sidebar.write("Please say 'present' when called.")
         st.sidebar.write("Listening...")
         status = recognize_present(timeout=5)
         if status:
-            roll_call_output.append(f"{student_name}: present")
+            attendance = attendance.append({"Roll Number": roll_number, "Student Name": student_name, "Attendance": "Present"}, ignore_index=True)
             st.success("Attendance marked.")
-            attendance.loc[attendance['Lec_num'] == num_lecture, roll_number] = 'P'
         else:
-            roll_call_output.append(f"{student_name}: absent")
+            attendance = attendance.append({"Roll Number": roll_number, "Student Name": student_name, "Attendance": "Absent"}, ignore_index=True)
             st.error("Attendance not marked.")
-            attendance.loc[attendance['Lec_num'] == num_lecture, roll_number] = 'A'
-        attendance.to_csv('attendance.csv', index=False)
-
+    
     st.sidebar.success("Roll Call Completed.")
     
-    empty_roll_call = pd.DataFrame(columns=["Roll Number", "Attendance"])
-    st.table(empty_roll_call)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write("### Roll Call Data")
-        st.table(attendance)
-        
-    with col2:
-        st.write("### Roll Call Summary")
-        st.write(roll_call_output)
+    st.write("### Roll Call Data")
+    st.table(attendance)
 
 if __name__ == "__main__":
     main()
