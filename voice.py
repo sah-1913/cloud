@@ -8,17 +8,13 @@ import os
 
 
 
-try:
-    # Attempt to record audio
-    audio_data = st.audio("Record audio", format="audio/wav", start_recording=True, encoding="wav")
-    st.write("Microphone is available.")
-except Exception as e:
-    st.error("Microphone is not available. Please grant microphone permissions.")
-    st.write("Error:", e)
-    st.write("Instructions for granting microphone permissions:")
-    st.write("- For Windows: Go to Windows Settings > Privacy > Microphone and enable microphone access for the browser or application.")
-    st.write("- For macOS: Go to System Preferences > Security & Privacy > Privacy > Microphone and grant permission to the browser or application.")
-    st.write("- For Linux: Instructions may vary. Please refer to your system documentation.")
+# try:
+#     # Attempt to record audio
+#     audio_data = st.audio("Record audio", format="audio/wav", start_recording=True, encoding="wav")
+#     st.write("Microphone is available.")
+# except Exception as e:
+#     st.error("Microphone is not available. Please grant microphone permissions.")
+
 
 
 
